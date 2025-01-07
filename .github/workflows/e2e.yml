@@ -20,7 +20,6 @@ jobs:
 
       - name: Get the Vercel preview url
         id: vercel_preview_url
-        if: github.event_name == 'pull_request'
         uses: zentered/vercel-preview-url@v1.4.0
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -31,7 +30,7 @@ jobs:
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         with:
-          deployment-url: ${{ github.event_name != 'pull_request' && 'https://playwright-vercel-preview-demo.vercel.app/' || format('https://{0}', steps.vercel_preview_url.outputs.preview_url) }}
+          deployment-url: ${{ format('https://{0}', steps.vercel_preview_url.outputs.preview_url) }}
           timeout: 420
           poll-interval: 15
 
@@ -41,4 +40,4 @@ jobs:
           npm run test:playwright
         continue-on-error: true
         env:
-          DEPLOYMENT_URL: ${{ github.event_name != 'pull_request' && 'https://playwright-vercel-preview-demo.vercel.app/' || format('https://{0}', steps.vercel_preview_url.outputs.preview_url) }}
+          DEPLOYMENT_URL: ${{ format('https://{0}', steps.vercel_preview_url.outputs.preview_url) }}
