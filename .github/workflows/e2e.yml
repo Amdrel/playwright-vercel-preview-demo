@@ -50,3 +50,4 @@ jobs:
           npm run test:playwright
         env:
           DEPLOYMENT_URL: ${{ format('https://{0}', steps.vercel_preview_url.outputs.preview_url) }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
