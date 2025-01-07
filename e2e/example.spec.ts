@@ -9,5 +9,5 @@ test("has title", async ({ page }) => {
 test("has deploy button", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByRole("link", { name: "Deploy now" })).toBeHidden();
+  await expect(page.getByRole("link", { name: "Deploy now" })).toBeVisible();
 });
