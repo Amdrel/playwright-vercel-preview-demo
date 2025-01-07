@@ -48,6 +48,5 @@ jobs:
         id: e2e
         run:
           npm run test:playwright
-        continue-on-error: true
         env:
           DEPLOYMENT_URL: ${{ format('https://{0}', steps.vercel_preview_url.outputs.preview_url) }}
