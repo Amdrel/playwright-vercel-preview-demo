@@ -22,6 +22,9 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
+      - name: Install system dependencies needed by Playwright
+        run: sudo npx playwright install-deps
+
       - name: Install all supported Playwright browsers
         run: npx playwright install
 
