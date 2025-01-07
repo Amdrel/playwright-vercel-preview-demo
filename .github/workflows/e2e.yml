@@ -1,0 +1,44 @@
+name: E2E Tests (Playwright)
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Get the Vercel preview url
+        id: vercel_preview_url
+        if: github.event_name == 'pull_request'
+        uses: zentered/vercel-preview-url@v1.4.0
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        with:
+          vercel_app: 'playwright-vercel-preview-demo'
+
+      - uses: UnlyEd/github-action-await-vercel@v2.0.0
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        with:
+          deployment-url: ${{ github.event_name != 'pull_request' && 'https://playwright-vercel-preview-demo.vercel.app/' || format('https://{0}', steps.vercel_preview_url.outputs.preview_url) }}
+          timeout: 420
+          poll-interval: 15
+
+      - name: Run E2E tests
+        id: e2e
+        run:
+          npm run test:playwright
+        continue-on-error: true
+        env:
+          DEPLOYMENT_URL: ${{ github.event_name != 'pull_request' && 'https://playwright-vercel-preview-demo.vercel.app/' || format('https://{0}', steps.vercel_preview_url.outputs.preview_url) }}
